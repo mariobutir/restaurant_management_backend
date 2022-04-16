@@ -10,7 +10,7 @@ class VendorContactSerializer(serializers.ModelSerializer):
 
 
 class VendorSerializer(serializers.ModelSerializer):
-    contacts = VendorContactSerializer()
+    contacts = VendorContactSerializer(many=True)
 
     class Meta:
         model = Vendors

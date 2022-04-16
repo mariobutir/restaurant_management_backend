@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
 
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'restaurant_manager.apps.RestaurantManagerConfig',
     'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -49,7 +51,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'restaurant_management_backend.middlewares.response_middleware.ResponseMiddleware'
+    'restaurant_management_backend.middlewares.response_middleware.ResponseMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'restaurant_management_backend.urls'
