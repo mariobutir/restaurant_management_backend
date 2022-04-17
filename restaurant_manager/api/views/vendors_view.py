@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from restaurant_manager.api.decorators import use_transaction_atomic_and_handle_exceptions
-from restaurant_manager.api.serializers import VendorSerializer
+from restaurant_manager.api.serializers import VendorSerializer, VendorContactSerializer
 from restaurant_manager.models import Vendors
 
 
@@ -24,9 +24,14 @@ class VendorsView(viewsets.ViewSet):
 
     @use_transaction_atomic_and_handle_exceptions
     def create(self, request):
-        serializer = VendorSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        created_vendor = serializer.save()
+        vendor_serializer = VendorSerializer(data=request.data)
+        vendor_serializer.is_valid(raise_exception=True)
+        created_vendor = vendor_serializer.save()
+
+        for contact in request.data['contacts']:
+            vendor_contact_serializer = VendorContactSerializer(data=contact)
+            vendor_contact_serializer.is_valid(raise_exception=True)
+            vendor_contact_serializer.save(vendor=created_vendor)
 
         return Response(data=model_to_dict(created_vendor, fields=['id']), status=status.HTTP_201_CREATED)
 
