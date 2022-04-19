@@ -50,3 +50,9 @@ class VendorsView(viewsets.ViewSet):
             vendor_contact_serializer.save(vendor=updated_vendor)
 
         return Response(status=status.HTTP_200_OK)
+
+    @use_transaction_atomic_and_handle_exceptions
+    def destroy(self, request, pk):
+        Vendors.objects.get(id=pk).delete()
+
+        return Response(status=status.HTTP_200_OK)
