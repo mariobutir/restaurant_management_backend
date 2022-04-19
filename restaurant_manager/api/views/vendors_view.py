@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from restaurant_manager.api.decorators import use_transaction_atomic_and_handle_exceptions
 from restaurant_manager.api.serializers import VendorSerializer, VendorContactSerializer
-from restaurant_manager.models import Vendors
+from restaurant_manager.models import Vendors, VendorContacts
 
 
 class VendorsView(viewsets.ViewSet):
@@ -39,6 +39,14 @@ class VendorsView(viewsets.ViewSet):
     def update(self, request, pk):
         serializer = VendorSerializer(Vendors.objects.get(id=pk), data=request.data)
         serializer.is_valid(raise_exception=True)
-        updated = serializer.save()
+        updated_vendor = serializer.save()
+
+        for contact in serializer.data['contacts']:
+            VendorContacts.objects.get(id=contact['id']).delete()
+
+        for contact in request.data['contacts']:
+            vendor_contact_serializer = VendorContactSerializer(data=contact)
+            vendor_contact_serializer.is_valid(raise_exception=True)
+            vendor_contact_serializer.save(vendor=updated_vendor)
 
         return Response(status=status.HTTP_200_OK)

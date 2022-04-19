@@ -6,7 +6,7 @@ from restaurant_manager.models import Vendors, VendorContacts
 class VendorContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = VendorContacts
-        fields = ['name', 'number', 'email']
+        fields = ['id', 'name', 'number', 'email']
 
 
 class VendorSerializer(serializers.ModelSerializer):
